@@ -1,0 +1,251 @@
+================================================================================
+BRI DATA FETCH SUMMARY REPORT
+================================================================================
+Generated: 2025-12-12 01:55:11
+================================================================================
+
+Total Assets Processed: 22
+Successfully Fetched: 20
+Failed: 2
+
+--------------------------------------------------------------------------------
+SUCCESSFULLY FETCHED ASSETS
+--------------------------------------------------------------------------------
+
+Asset: DOW_JONES
+  Original Ticker: INDU
+  Yahoo Ticker: ^DJI
+  Asset Class: Equity Index
+  Description: Dow Jones Industrial Average
+  Data Points: 8,547
+  Start Date: 1992-01-02
+  End Date: 2025-12-10
+  Coverage: 33.9 years
+  File: raw_data\DOW_JONES_20251212_015500.csv
+
+Asset: NASDAQ_100
+  Original Ticker: NDX
+  Yahoo Ticker: ^NDX
+  Asset Class: Equity Index
+  Description: NASDAQ-100 Index
+  Data Points: 10,129
+  Start Date: 1985-10-01
+  End Date: 2025-12-11
+  Coverage: 40.2 years
+  File: raw_data\NASDAQ_100_20251212_015500.csv
+
+Asset: NIKKEI_225
+  Original Ticker: NKY
+  Yahoo Ticker: ^N225
+  Asset Class: Equity Index
+  Description: Nikkei 225 Index
+  Data Points: 14,983
+  Start Date: 1965-01-05
+  End Date: 2025-12-11
+  Coverage: 60.9 years
+  File: raw_data\NIKKEI_225_20251212_015501.csv
+
+Asset: HSCEI
+  Original Ticker: HSCEI
+  Yahoo Ticker: ^HSCE
+  Asset Class: Equity Index
+  Description: Hang Seng China Enterprises Index
+  Data Points: 7,996
+  Start Date: 1993-07-15
+  End Date: 2025-12-11
+  Coverage: 32.4 years
+  File: raw_data\HSCEI_20251212_015501.csv
+
+Asset: GOLD
+  Original Ticker: XAU
+  Yahoo Ticker: GC=F
+  Asset Class: Commodity
+  Description: Gold Futures (Continuous Contract)
+  Data Points: 6,345
+  Start Date: 2000-08-30
+  End Date: 2025-12-11
+  Coverage: 25.3 years
+  File: raw_data\GOLD_20251212_015502.csv
+
+Asset: CRUDE_OIL
+  Original Ticker: CO1
+  Yahoo Ticker: CL=F
+  Asset Class: Commodity
+  Description: Crude Oil Futures (Continuous Contract)
+  Data Points: 6,354
+  Start Date: 2000-08-23
+  End Date: 2025-12-11
+  Coverage: 25.3 years
+  File: raw_data\CRUDE_OIL_20251212_015502.csv
+
+Asset: BITCOIN
+  Original Ticker: XBTUSD
+  Yahoo Ticker: BTC-USD
+  Asset Class: Cryptocurrency
+  Description: Bitcoin USD
+  Data Points: 4,104
+  Start Date: 2014-09-17
+  End Date: 2025-12-11
+  Coverage: 11.2 years
+  File: raw_data\BITCOIN_20251212_015503.csv
+
+Asset: XLF
+  Original Ticker: XLF
+  Yahoo Ticker: XLF
+  Asset Class: Sector Index
+  Description: Financial Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLF_20251212_015503.csv
+
+Asset: XLY
+  Original Ticker: XLY
+  Yahoo Ticker: XLY
+  Asset Class: Sector Index
+  Description: Consumer Discretionary Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLY_20251212_015504.csv
+
+Asset: XLC
+  Original Ticker: XLC
+  Yahoo Ticker: XLC
+  Asset Class: Sector Index
+  Description: Communication Services Select Sector SPDR Fund
+  Data Points: 1,882
+  Start Date: 2018-06-19
+  End Date: 2025-12-11
+  Coverage: 7.5 years
+  File: raw_data\XLC_20251212_015504.csv
+
+Asset: XLI
+  Original Ticker: XLI
+  Yahoo Ticker: XLI
+  Asset Class: Sector Index
+  Description: Industrial Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLI_20251212_015504.csv
+
+Asset: XLK
+  Original Ticker: XLK
+  Yahoo Ticker: XLK
+  Asset Class: Sector Index
+  Description: Technology Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLK_20251212_015505.csv
+
+Asset: XLV
+  Original Ticker: XLV
+  Yahoo Ticker: XLV
+  Asset Class: Sector Index
+  Description: Health Care Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLV_20251212_015505.csv
+
+Asset: XLE
+  Original Ticker: XLE
+  Yahoo Ticker: XLE
+  Asset Class: Sector Index
+  Description: Energy Select Sector SPDR Fund
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\XLE_20251212_015506.csv
+
+Asset: IXE
+  Original Ticker: IXE
+  Yahoo Ticker: XLE
+  Asset Class: Sector Index
+  Description: S&P Global Energy Index
+  Data Points: 6,785
+  Start Date: 1998-12-22
+  End Date: 2025-12-11
+  Coverage: 27.0 years
+  File: raw_data\IXE_20251212_015507.csv
+
+Asset: BIOTECH
+  Original Ticker: IBB
+  Yahoo Ticker: IBB
+  Asset Class: Sector Index
+  Description: iShares Biotechnology ETF
+  Data Points: 6,246
+  Start Date: 2001-02-12
+  End Date: 2025-12-11
+  Coverage: 24.8 years
+  File: raw_data\BIOTECH_20251212_015507.csv
+
+Asset: DAX
+  Original Ticker: DAX
+  Yahoo Ticker: ^GDAXI
+  Asset Class: Equity Index
+  Description: DAX Performance Index (Germany)
+  Data Points: 9,599
+  Start Date: 1987-12-30
+  End Date: 2025-12-11
+  Coverage: 37.9 years
+  File: raw_data\DAX_20251212_015508.csv
+
+Asset: CSI300
+  Original Ticker: CSI300
+  Yahoo Ticker: 000300.SS
+  Asset Class: Equity Index
+  Description: CSI 300 Index (China A-shares)
+  Data Points: 1,155
+  Start Date: 2021-03-11
+  End Date: 2025-12-11
+  Coverage: 4.8 years
+  File: raw_data\CSI300_20251212_015508.csv
+
+Asset: MAG7
+  Original Ticker: MAG7
+  Yahoo Ticker: MAGS
+  Asset Class: Thematic Index
+  Description: Roundhill Magnificent Seven ETF (Apple, Microsoft, Google, Amazon, Nvidia, Meta, Tesla)
+  Data Points: 672
+  Start Date: 2023-04-11
+  End Date: 2025-12-11
+  Coverage: 2.7 years
+  File: raw_data\MAG7_20251212_015511.csv
+
+Asset: COPPER
+  Original Ticker: HG
+  Yahoo Ticker: HG=F
+  Asset Class: Commodity
+  Description: Copper Futures (Continuous Contract)
+  Data Points: 6,350
+  Start Date: 2000-08-30
+  End Date: 2025-12-11
+  Coverage: 25.3 years
+  File: raw_data\COPPER_20251212_015511.csv
+
+--------------------------------------------------------------------------------
+FAILED FETCHES
+--------------------------------------------------------------------------------
+
+Asset: CSI1000
+  Original Ticker: CSI1000
+  Attempted Yahoo Ticker: 000852.SS
+  Asset Class: Equity Index
+
+Asset: HSTECH
+  Original Ticker: HSTECH
+  Attempted Yahoo Ticker: ^HSTECH
+  Asset Class: Equity Index
+
+================================================================================
+END OF REPORT
+================================================================================

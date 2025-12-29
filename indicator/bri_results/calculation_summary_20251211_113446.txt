@@ -1,0 +1,91 @@
+BRI CALCULATION SUMMARY
+================================================================================
+Date: 2025-12-11 11:34:46
+Configuration: default
+Total assets: 8
+Successful: 8
+Failed: 0
+================================================================================
+
+SUCCESSFUL CALCULATIONS:
+--------------------------------------------------------------------------------
+
+DOW_JONES:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 48057.75
+  Composite BRI: 0.581
+  Risk Level: Normal
+  Short-term: -0.257 (Normal)
+  Mid-term: 1.319 (Normal)
+  Long-term: 0.681 (Normal)
+  Output: bri_results\DOW_JONES_BRI_20251211_113443.csv
+
+NASDAQ_100:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 25776.44
+  Composite BRI: 0.594
+  Risk Level: Normal
+  Short-term: -0.168 (Normal)
+  Mid-term: 1.430 (Normal)
+  Long-term: 0.520 (Normal)
+  Output: bri_results\NASDAQ_100_BRI_20251211_113443.csv
+
+NIKKEI_225:
+  Date: 2025-12-11 00:00:00+09:00
+  Price: 50308.89
+  Composite BRI: 0.534
+  Risk Level: Normal
+  Short-term: 0.406 (Normal)
+  Mid-term: 0.692 (Normal)
+  Long-term: 0.503 (Normal)
+  Output: bri_results\NIKKEI_225_BRI_20251211_113444.csv
+
+HSCEI:
+  Date: 2025-12-11 00:00:00+08:00
+  Price: 8938.91
+  Composite BRI: 0.145
+  Risk Level: Normal
+  Short-term: -0.410 (Normal)
+  Mid-term: 0.638 (Normal)
+  Long-term: 0.208 (Normal)
+  Output: bri_results\HSCEI_BRI_20251211_113444.csv
+
+GOLD:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 4255.70
+  Composite BRI: 0.451
+  Risk Level: Normal
+  Short-term: 0.609 (Normal)
+  Mid-term: 0.570 (Normal)
+  Long-term: 0.174 (Normal)
+  Output: bri_results\GOLD_BRI_20251211_113445.csv
+
+CRUDE_OIL:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 58.78
+  Composite BRI: -0.343
+  Risk Level: Normal
+  Short-term: 0.004 (Normal)
+  Mid-term: -0.348 (Normal)
+  Long-term: -0.686 (Normal)
+  Output: bri_results\CRUDE_OIL_BRI_20251211_113445.csv
+
+BITCOIN:
+  Date: 2025-12-11 00:00:00+00:00
+  Price: 90089.25
+  Composite BRI: -0.489
+  Risk Level: Normal
+  Short-term: -0.676 (Normal)
+  Mid-term: -0.410 (Normal)
+  Long-term: -0.383 (Normal)
+  Output: bri_results\BITCOIN_BRI_20251211_113446.csv
+
+BIOTECH:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 168.93
+  Composite BRI: -0.082
+  Risk Level: Normal
+  Short-term: 0.077 (Normal)
+  Mid-term: 0.071 (Normal)
+  Long-term: -0.393 (Normal)
+  Output: bri_results\BIOTECH_BRI_20251211_113446.csv

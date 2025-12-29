@@ -1,0 +1,105 @@
+================================================================================
+BRI DATA FETCH SUMMARY REPORT
+================================================================================
+Generated: 2025-12-11 10:55:33
+================================================================================
+
+Total Assets Processed: 8
+Successfully Fetched: 8
+Failed: 0
+
+--------------------------------------------------------------------------------
+SUCCESSFULLY FETCHED ASSETS
+--------------------------------------------------------------------------------
+
+Asset: DOW_JONES
+  Original Ticker: INDU
+  Yahoo Ticker: ^DJI
+  Asset Class: Equity Index
+  Description: Dow Jones Industrial Average
+  Data Points: 8,547
+  Start Date: 1992-01-02
+  End Date: 2025-12-10
+  Coverage: 33.9 years
+  File: raw_data\DOW_JONES_20251211_105513.csv
+
+Asset: NASDAQ_100
+  Original Ticker: NDX
+  Yahoo Ticker: ^NDX
+  Asset Class: Equity Index
+  Description: NASDAQ-100 Index
+  Data Points: 10,128
+  Start Date: 1985-10-01
+  End Date: 2025-12-10
+  Coverage: 40.2 years
+  File: raw_data\NASDAQ_100_20251211_105515.csv
+
+Asset: NIKKEI_225
+  Original Ticker: NKY
+  Yahoo Ticker: ^N225
+  Asset Class: Equity Index
+  Description: Nikkei 225 Index
+  Data Points: 14,983
+  Start Date: 1965-01-05
+  End Date: 2025-12-11
+  Coverage: 60.9 years
+  File: raw_data\NIKKEI_225_20251211_105521.csv
+
+Asset: HSCEI
+  Original Ticker: HSCEI
+  Yahoo Ticker: ^HSCE
+  Asset Class: Equity Index
+  Description: Hang Seng China Enterprises Index
+  Data Points: 7,996
+  Start Date: 1993-07-15
+  End Date: 2025-12-11
+  Coverage: 32.4 years
+  File: raw_data\HSCEI_20251211_105524.csv
+
+Asset: GOLD
+  Original Ticker: XAU
+  Yahoo Ticker: GC=F
+  Asset Class: Commodity
+  Description: Gold Futures (Continuous Contract)
+  Data Points: 6,344
+  Start Date: 2000-08-30
+  End Date: 2025-12-10
+  Coverage: 25.3 years
+  File: raw_data\GOLD_20251211_105527.csv
+
+Asset: CRUDE_OIL
+  Original Ticker: CO1
+  Yahoo Ticker: CL=F
+  Asset Class: Commodity
+  Description: Crude Oil Futures (Continuous Contract)
+  Data Points: 6,353
+  Start Date: 2000-08-23
+  End Date: 2025-12-10
+  Coverage: 25.3 years
+  File: raw_data\CRUDE_OIL_20251211_105528.csv
+
+Asset: BITCOIN
+  Original Ticker: XBTUSD
+  Yahoo Ticker: BTC-USD
+  Asset Class: Cryptocurrency
+  Description: Bitcoin USD
+  Data Points: 4,103
+  Start Date: 2014-09-17
+  End Date: 2025-12-11
+  Coverage: 11.2 years
+  File: raw_data\BITCOIN_20251211_105531.csv
+
+Asset: BIOTECH
+  Original Ticker: SPSIBI
+  Yahoo Ticker: IBB
+  Asset Class: Sector Index
+  Description: S&P Biotech Select Industry Index
+  Data Points: 6,245
+  Start Date: 2001-02-12
+  End Date: 2025-12-10
+  Coverage: 24.8 years
+  File: raw_data\BIOTECH_20251211_105532.csv
+
+================================================================================
+END OF REPORT
+================================================================================
