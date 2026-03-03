@@ -363,7 +363,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_short, width='stretch')
+        st.plotly_chart(fig_short)
         
         # Mid-term BRI
         fig_mid = go.Figure()
@@ -382,7 +382,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_mid, width='stretch')
+        st.plotly_chart(fig_mid)
     
     with col2:
         # Long-term BRI
@@ -402,7 +402,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_long, width='stretch')
+        st.plotly_chart(fig_long)
         
         # Composite BRI
         fig_composite = go.Figure()
@@ -421,7 +421,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_composite, width='stretch')
+        st.plotly_chart(fig_composite)
 
 
 # ==================== 页面定义 ====================
@@ -496,7 +496,7 @@ def dashboard_page():
     st.header("🔮 BRI Heat Map")
     bubble_fig = create_bubble_chart(metrics_df)
     if bubble_fig:
-        st.plotly_chart(bubble_fig, width='stretch')
+        st.plotly_chart(bubble_fig)
     
     # Asset selection
     st.markdown("---")
