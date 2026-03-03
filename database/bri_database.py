@@ -136,7 +136,17 @@ class BRIDatabase:
     def get_price_data(self, asset_name: str, start_date=None, end_date=None):
         """读取价格数据"""
         conn = sqlite3.connect(self.db_path)
-        
+
+        # Fix timezone: convert to tz-naive before using in SQL
+        if start_date is not None:
+            if hasattr(start_date, 'tzinfo') and start_date.tzinfo is not None:
+                start_date = start_date.tz_convert(None)
+            start_date = pd.Timestamp(start_date).normalize()
+        if end_date is not None:
+            if hasattr(end_date, 'tzinfo') and end_date.tzinfo is not None:
+                end_date = end_date.tz_convert(None)
+            end_date = pd.Timestamp(end_date).normalize()
+
         query = "SELECT date, open, high, low, close, volume FROM price_data WHERE asset_name = ?"
         params = [asset_name]
         

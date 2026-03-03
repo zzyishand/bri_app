@@ -74,7 +74,15 @@ class BRIUpdateService:
                 }
             
             latest_available_date = recent_data.index[-1]
-            
+
+            # Fix timezone mismatch: make timestamps timezone-naive for comparison
+            # Convert the entire index to tz-naive to avoid comparison errors
+            if latest_available_date.tzinfo is not None:
+                recent_data = recent_data.tz_convert(None)
+                latest_available_date = recent_data.index[-1]
+
+            # last_db_date from database is already tz-naive (stored as date, not datetime with tz)
+
             # 比较日期
             if last_db_date is None:
                 # 第一次获取数据
@@ -156,7 +164,18 @@ class BRIUpdateService:
                     period=period,
                     interval='1d'
                 )
-            
+
+            # Fix timezone: convert to tz-naive before saving to SQLite
+            if price_data is not None and price_data.index.tz is not None:
+                price_data = price_data.tz_convert(None)
+                # Also need to update the metadata dates
+                if 'start_date' in metadata:
+                    if metadata['start_date'].tzinfo is not None:
+                        metadata['start_date'] = metadata['start_date'].tz_convert(None)
+                if 'end_date' in metadata:
+                    if metadata['end_date'].tzinfo is not None:
+                        metadata['end_date'] = metadata['end_date'].tz_convert(None)
+
             if price_data is not None:
                 print(f"      → Downloaded {len(price_data)} rows, date range: {price_data.index[0]} to {price_data.index[-1]}")
             
@@ -170,10 +189,14 @@ class BRIUpdateService:
                 asset_name, 'price_fetch', 'success',
                 len(price_data), f"Fetched {len(price_data)} rows"
             )
-            
+
             # 3. 检查BRI是否需要更新
             last_bri_date = self.db.get_last_date(asset_name, 'bri_results')
-            
+
+            # Fix timezone: make last_bri_date tz-naive if it has timezone
+            if last_bri_date is not None and last_bri_date.tzinfo is not None:
+                last_bri_date = last_bri_date.tz_convert(None)
+
             if force_full or last_bri_date is None:
                 # 完全重新计算
                 print(f"[3/4] Calculating BRI (full recalculation)...")
