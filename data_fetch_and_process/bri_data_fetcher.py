@@ -44,6 +44,12 @@ BRI_ASSETS = {
         'asset_class': 'Equity Index',
         'original_ticker': 'NKY'
     },
+    'KOSPI': {
+        'yahoo_ticker': '^KS11',
+        'description': 'KOSPI Composite Index',
+        'asset_class': 'Equity Index',
+        'original_ticker': 'KS11'
+    },
     'HSI': {
         'yahoo_ticker': '^HSI',
         'description': 'Hang Seng Index',

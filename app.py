@@ -34,6 +34,7 @@ ASSET_INFO = {
     'DOW_JONES': {'name_en': 'Dow Jones', 'name_cn': '道琼斯', 'category': 'Global Equity'},
     'NASDAQ_100': {'name_en': 'NASDAQ-100', 'name_cn': '纳斯达克100', 'category': 'Global Equity'},
     'NIKKEI_225': {'name_en': 'Nikkei 225', 'name_cn': '日经225', 'category': 'Global Equity'},
+    'KOSPI': {'name_en': 'KOSPI', 'name_cn': '韩国综合指数', 'category': 'Global Equity'},
     'HSI': {'name_en': 'Hang Seng', 'name_cn': '恒生指数', 'category': 'Global Equity'},
     'DAX': {'name_en': 'DAX', 'name_cn': '德国DAX', 'category': 'Global Equity'},
     'CSI300': {'name_en': 'CSI 300', 'name_cn': '中证300', 'category': 'Global Equity'},
@@ -64,7 +65,7 @@ ASSET_INFO = {
 # Common Assets - Most watched assets (默认显示)
 COMMON_ASSETS = [
     'GOLD', 'CRUDE_OIL', 'COPPER',  # Commodities
-    'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'DAX', 'DOW_JONES',  # Global Equities
+    'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'DOW_JONES',  # Global Equities
     'US_DOLLAR_INDEX', 'EUR', 'JPY',  # Currencies
     'IG_SPREAD', 'HY_SPREAD'  # Credit Spreads
 ]
@@ -686,21 +687,23 @@ def custom_ticker_page():
         st.markdown("""
         ### 使用说明 / Instructions
         
-        1. **输入Ticker**: 输入任何Yahoo Finance的ticker symbol（如：TSLA, AAPL, ^GSPC）
-        2. **检查状态**: 点击"Check Ticker"查看ticker是否已在数据库中
-        3. **分析设置**: 
-           - 选择历史数据年限（3-10年）
-           - 选择是否保存到数据库
-           - 可自定义资产名称和类别
-        4. **执行分析**: 点击"Analyze Ticker"开始分析
-        5. **查看结果**: 查看BRI指标、图表和风险评估
+        1. **输入Ticker**: 输入任意 Yahoo Finance 的 ticker symbol（见下方示例）
+        2. **检查状态**: 点击 "Check Ticker" 查看该 ticker 是否已在数据库中
+        3. **分析设置**: 选择历史数据年限（3–10 年）、是否保存到数据库，可自定义资产名称与类别
+        4. **执行分析**: 点击 "Analyze Ticker" 开始计算 BRI
+        5. **查看结果**: 查看 BRI 指标、图表与风险评估
         
-        ### Ticker示例 / Examples
-        - **股票 Stocks**: TSLA, AAPL, MSFT, GOOGL
-        - **指数 Indices**: ^GSPC (S&P 500), ^IXIC (NASDAQ), ^FTSE (FTSE 100)
-        - **商品 Commodities**: GC=F (Gold), CL=F (Crude Oil)
-        - **加密货币 Crypto**: BTC-USD, ETH-USD
-        - **ETF**: SPY, QQQ, IWM
+        ### 内置资产 Ticker 示例 / Built-in asset tickers (可直接输入核对)
+        
+        - **全球股指 Global Equity**: ^DJI (道琼斯), ^NDX (纳斯达克100), ^N225 (日经225), **^KS11 (韩国KOSPI)**, ^HSI (恒生), ^GDAXI (德国DAX), 000300.SS (中证300), ASHS (中证500), HSTECH.HK (恒生科技)
+        - **美国行业 US Sectors**: XLF (金融), XLY (可选消费), XLC (通信), XLI (工业), XLK (科技), XLV (医疗), XLE (能源), ^IXE (能源指数), IBB (生物科技)
+        - **商品 Commodities**: GC=F (黄金), SI=F (白银), CL=F (原油), HG=F (铜)
+        - **货币 Currencies**: DX-Y.NYB (美元指数), JPY=X (日元), EUR=X (欧元)
+        - **加密货币 Crypto**: BTC-USD (比特币)
+        - **科技巨头 Tech**: MAGS (Mag 7)
+        - **其他/个股 Other**: 股票如 TSLA, AAPL；指数如 ^GSPC (标普500), ^IXIC (纳斯达克综合)；ETF 如 SPY, QQQ
+        
+        *信用利差 IG/HY 来自 FRED，不可用 Yahoo ticker 直接查询。*
         """)
     
     st.markdown("---")
