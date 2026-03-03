@@ -363,7 +363,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_short, use_container_width=True)
+        st.plotly_chart(fig_short, width='stretch')
         
         # Mid-term BRI
         fig_mid = go.Figure()
@@ -382,7 +382,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_mid, use_container_width=True)
+        st.plotly_chart(fig_mid, width='stretch')
     
     with col2:
         # Long-term BRI
@@ -402,7 +402,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_long, use_container_width=True)
+        st.plotly_chart(fig_long, width='stretch')
         
         # Composite BRI
         fig_composite = go.Figure()
@@ -421,7 +421,7 @@ def create_indicator_plots(asset_data, asset_name):
             yaxis=dict(tickformat='.0%'),
             height=300
         )
-        st.plotly_chart(fig_composite, use_container_width=True)
+        st.plotly_chart(fig_composite, width='stretch')
 
 
 # ==================== 页面定义 ====================
@@ -496,7 +496,7 @@ def dashboard_page():
     st.header("🔮 BRI Heat Map")
     bubble_fig = create_bubble_chart(metrics_df)
     if bubble_fig:
-        st.plotly_chart(bubble_fig, use_container_width=True)
+        st.plotly_chart(bubble_fig, width='stretch')
     
     # Asset selection
     st.markdown("---")
@@ -512,7 +512,7 @@ def dashboard_page():
             if st.button(
                 f"{risk_emoji} {row['name_en']}\n{row['name_cn']}\n{row['bri']:.1%}",
                 key=f"btn_{row['asset']}",
-                use_container_width=True
+                width='stretch'
             ):
                 st.session_state['selected_asset'] = row['asset']
     
@@ -595,7 +595,7 @@ def update_page():
                 df_needs_update = pd.DataFrame(needs_update)
                 st.dataframe(df_needs_update[[
                     'asset', 'last_db_date', 'latest_available_date', 'new_rows'
-                ]], use_container_width=True)
+                ]], width='stretch')
                 
                 st.session_state['assets_to_update'] = needs_update
             else:
@@ -719,7 +719,7 @@ def custom_ticker_page():
         ).strip().upper()
     
     with col2:
-        if st.button("🔍 Check Ticker", use_container_width=True):
+        if st.button("🔍 Check Ticker", width='stretch'):
             if ticker_input:
                 with st.spinner("Checking ticker..."):
                     check_result = service.check_ticker_exists(ticker_input)
@@ -805,7 +805,7 @@ def custom_ticker_page():
     st.markdown("---")
     
     # 分析按钮
-    if st.button("🚀 Analyze Ticker", type="primary", use_container_width=True):
+    if st.button("🚀 Analyze Ticker", type="primary", width='stretch'):
         with st.spinner(f"Analyzing {ticker_input}..."):
             # 执行分析
             result = service.analyze_custom_ticker(
@@ -936,9 +936,9 @@ def history_page():
         
         # Display table
         st.dataframe(
-            history[['created_at', 'asset_name', 'update_type', 'status', 
+            history[['created_at', 'asset_name', 'update_type', 'status',
                     'rows_affected', 'message']],
-            use_container_width=True
+            width='stretch'
         )
     else:
         st.info("No update history yet")
