@@ -1,0 +1,9 @@
+Case,Yahoo Ticker,Bloomberg,Target Period,Available From,Available To,Days,Status
+Dow_1929,^DJI,INDU,Oct-1926 to Sep-1929,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Gold_1980,GC=F,XAU,Jul-1979 to Jan-1980,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Nikkei_1987,^N225,NKY,Jan-1986 to Oct-1987,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Nasdaq_2000,^IXIC,NDX,Jan-1995 to Mar-2000,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+HSCEI_2007,^HSCE,HSCEI,Jun-2006 to Oct-2007,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Oil_2008,CL=F,CO1,Jan-2007 to Jul-2008,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Bitcoin_2017,BTC-USD,XBTUSD,Jul-2017 to Dec-2017,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
+Biotech_2021,XBI,SPSIBI,May-2020 to Feb-2021,N/A,N/A,0,✗ Too Many Requests. Rate limited. Try after a while.
