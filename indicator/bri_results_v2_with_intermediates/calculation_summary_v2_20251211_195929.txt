@@ -1,0 +1,84 @@
+BRI CALCULATION SUMMARY (V2 - Percentile Rank Method)
+================================================================================
+Date: 2025-12-11 19:59:29
+Configuration: default
+Methodology: Percentile Rank with Historical Lookback
+Total assets: 8
+Successful: 8
+Failed: 0
+================================================================================
+
+SUCCESSFUL CALCULATIONS:
+--------------------------------------------------------------------------------
+
+DOW_JONES:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 48057.75
+  Composite BRI: 0.4303
+  Short-term: 0.3161 (percentile: 41.9)
+  Mid-term: 0.5236 (percentile: 54.7)
+  Long-term: 0.4511 (percentile: 57.2)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\DOW_JONES_BRI_v2_20251211_195655.csv
+
+NASDAQ_100:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 25776.44
+  Composite BRI: 0.3797
+  Short-term: 0.3397 (percentile: 43.7)
+  Mid-term: 0.3072 (percentile: 31.8)
+  Long-term: 0.4920 (percentile: 54.5)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\NASDAQ_100_BRI_v2_20251211_195729.csv
+
+NIKKEI_225:
+  Date: 2025-12-11 00:00:00+09:00
+  Price: 50308.89
+  Composite BRI: 0.7004
+  Short-term: 0.5712 (percentile: 66.5)
+  Mid-term: 0.7549 (percentile: 76.7)
+  Long-term: 0.7751 (percentile: 79.9)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\NIKKEI_225_BRI_v2_20251211_195803.csv
+
+HSCEI:
+  Date: 2025-12-11 00:00:00+08:00
+  Price: 8938.91
+  Composite BRI: 0.2381
+  Short-term: 0.0705 (percentile: 20.5)
+  Mid-term: 0.1000 (percentile: 16.8)
+  Long-term: 0.5439 (percentile: 58.1)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\HSCEI_BRI_v2_20251211_195821.csv
+
+GOLD:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 4255.70
+  Composite BRI: 0.8118
+  Short-term: 0.6403 (percentile: 72.7)
+  Mid-term: 0.8452 (percentile: 86.9)
+  Long-term: 0.9498 (percentile: 95.1)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\GOLD_BRI_v2_20251211_195840.csv
+
+CRUDE_OIL:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 58.78
+  Composite BRI: 0.0691
+  Short-term: 0.1130 (percentile: 33.9)
+  Mid-term: 0.0514 (percentile: 26.0)
+  Long-term: 0.0427 (percentile: 23.0)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\CRUDE_OIL_BRI_v2_20251211_195900.csv
+
+BITCOIN:
+  Date: 2025-12-11 00:00:00+00:00
+  Price: 90089.25
+  Composite BRI: 0.0412
+  Short-term: 0.0347 (percentile: 43.5)
+  Mid-term: 0.0126 (percentile: 12.6)
+  Long-term: 0.0761 (percentile: 11.0)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\BITCOIN_BRI_v2_20251211_195909.csv
+
+BIOTECH:
+  Date: 2025-12-10 00:00:00-05:00
+  Price: 168.93
+  Composite BRI: 0.6009
+  Short-term: 0.4616 (percentile: 49.0)
+  Mid-term: 0.6730 (percentile: 67.9)
+  Long-term: 0.6680 (percentile: 73.2)
+  Output: C:\Users\ASUS\Desktop\python project\BRI\indicator\bri_results_v2_with_intermediates\BIOTECH_BRI_v2_20251211_195929.csv
