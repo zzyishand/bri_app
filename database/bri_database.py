@@ -142,10 +142,12 @@ class BRIDatabase:
             if hasattr(start_date, 'tzinfo') and start_date.tzinfo is not None:
                 start_date = start_date.tz_convert(None)
             start_date = pd.Timestamp(start_date).normalize()
+            start_date = start_date.strftime('%Y-%m-%d')  # Convert to string for SQLite
         if end_date is not None:
             if hasattr(end_date, 'tzinfo') and end_date.tzinfo is not None:
                 end_date = end_date.tz_convert(None)
             end_date = pd.Timestamp(end_date).normalize()
+            end_date = end_date.strftime('%Y-%m-%d')  # Convert to string for SQLite
 
         query = "SELECT date, open, high, low, close, volume FROM price_data WHERE asset_name = ?"
         params = [asset_name]
