@@ -554,118 +554,140 @@ def update_page():
     st.title("🔄 BRI Data Update Center")
     st.markdown("**Fetch latest data and calculate BRI indicators**")
     st.markdown("---")
-    
+
     update_service = get_update_service()
-    
-    # 1. Quick check
-    st.header("1️⃣ Quick Check - All Assets")
-    
-    if st.button("🔍 Check for Updates", type="primary"):
-        with st.spinner("Checking all assets..."):
-            check_results = []
-            
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            for idx, (asset_key, asset_info) in enumerate(BRI_ASSETS.items()):
-                progress = (idx + 1) / len(BRI_ASSETS)
-                progress_bar.progress(progress)
-                status_text.text(f"Checking {asset_key}... ({idx+1}/{len(BRI_ASSETS)})")
-                
-                result = update_service.check_for_updates(
-                    asset_key,
-                    asset_info['yahoo_ticker']
-                )
-                result['asset'] = asset_key
-                check_results.append(result)
-            
-            status_text.text("✅ Check complete!")
-            
-            # Display results
-            needs_update = [r for r in check_results if r.get('has_new_data')]
-            up_to_date = [r for r in check_results if not r.get('has_new_data')]
-            
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Total Assets", len(check_results))
-            col2.metric("Needs Update", len(needs_update), delta=len(needs_update))
-            col3.metric("Up to Date", len(up_to_date))
-            
-            if needs_update:
-                st.success(f"Found {len(needs_update)} assets with new data!")
-                df_needs_update = pd.DataFrame(needs_update)
-                st.dataframe(df_needs_update[[
-                    'asset', 'last_db_date', 'latest_available_date', 'new_rows'
-                ]], width='stretch')
-                
-                st.session_state['assets_to_update'] = needs_update
-            else:
-                st.info("All assets are up to date! ✅")
-    
-    # 2. Execute update
-    st.header("2️⃣ Update Assets")
-    
+
+    # ============================================================
+    # Section 1: Quick Check - Scan all assets for new data
+    # ============================================================
+    with st.expander("📋 Step 1: Quick Check - Scan for Updates", expanded=True):
+        st.markdown("点击下方按钮扫描所有资产，检查是否有新数据可用")
+
+        if st.button("🔍 Check for Updates", type="primary"):
+            with st.spinner("Checking all assets..."):
+                check_results = []
+
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+
+                for idx, (asset_key, asset_info) in enumerate(BRI_ASSETS.items()):
+                    progress = (idx + 1) / len(BRI_ASSETS)
+                    progress_bar.progress(progress)
+                    status_text.text(f"Checking {asset_key}... ({idx+1}/{len(BRI_ASSETS)})")
+
+                    result = update_service.check_for_updates(
+                        asset_key,
+                        asset_info['yahoo_ticker']
+                    )
+                    result['asset'] = asset_key
+                    check_results.append(result)
+
+                status_text.text("✅ Check complete!")
+
+                # Display results
+                needs_update = [r for r in check_results if r.get('has_new_data')]
+                up_to_date = [r for r in check_results if not r.get('has_new_data')]
+
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Total Assets", len(check_results))
+                col2.metric("Needs Update", len(needs_update), delta=len(needs_update))
+                col3.metric("Up to Date", len(up_to_date))
+
+                if needs_update:
+                    st.success(f"Found {len(needs_update)} assets with new data!")
+                    df_needs_update = pd.DataFrame(needs_update)
+                    st.dataframe(df_needs_update[[
+                        'asset', 'last_db_date', 'latest_available_date', 'new_rows'
+                    ]], width='stretch')
+
+                    st.session_state['assets_to_update'] = needs_update
+                else:
+                    st.info("All assets are up to date! ✅")
+
+    # ============================================================
+    # Section 2: Batch Update - Update multiple assets
+    # ============================================================
+    st.markdown("---")
+    st.header("⚡ Batch Update")
+
     if 'assets_to_update' in st.session_state:
         assets_to_update = st.session_state['assets_to_update']
-        
+
         st.write(f"Ready to update {len(assets_to_update)} assets:")
         selected_assets = st.multiselect(
             "Select assets to update:",
             [a['asset'] for a in assets_to_update],
             default=[a['asset'] for a in assets_to_update]
         )
-        
-        if st.button("▶️ Start Update", type="primary"):
+
+        # Option for force full recalculation
+        force_full_batch = st.checkbox("🔄 Force full recalculation (重新计算所有历史数据)", help="如果数据有问题或需要重新计算所有BRI指标，勾选此项")
+
+        if st.button("▶️ Start Batch Update", type="primary"):
             progress_bar = st.progress(0)
             status_text = st.empty()
             results_container = st.container()
-            
+
             update_results = []
-            
+
             for idx, asset_name in enumerate(selected_assets):
                 progress = (idx + 1) / len(selected_assets)
                 progress_bar.progress(progress)
                 status_text.text(f"Updating {asset_name}... ({idx+1}/{len(selected_assets)})")
-                
+
                 asset_info = BRI_ASSETS[asset_name]
                 result = update_service.update_asset(
                     asset_name,
-                    asset_info['yahoo_ticker']
+                    asset_info['yahoo_ticker'],
+                    force_full=force_full_batch
                 )
                 update_results.append(result)
-                
+
                 with results_container:
                     if result['success']:
                         st.success(f"✅ {asset_name}: Added {result['new_bri_rows']} new BRI rows")
                     else:
                         st.error(f"❌ {asset_name}: {result.get('error', 'Unknown error')}")
-            
+
             status_text.text("✅ Update complete!")
-            
+
             # Clear list
             del st.session_state['assets_to_update']
-            
+
             # Force reload data
             st.cache_data.clear()
-    
-    # 3. Manual update
-    st.header("3️⃣ Manual Update")
-    
-    selected_asset = st.selectbox(
-        "Select Asset:",
-        list(BRI_ASSETS.keys())
-    )
-    
-    force_full = st.checkbox("Force full recalculation (重新计算所有历史数据)")
-    
-    if st.button("🔄 Update Selected Asset"):
+    else:
+        st.info("请先运行 Step 1: Quick Check 来扫描需要更新的资产")
+
+    # ============================================================
+    # Section 3: Single Asset Update - Manual update one asset
+    # ============================================================
+    st.markdown("---")
+    st.header("👤 Single Asset Update")
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        selected_asset = st.selectbox(
+            "Select Asset:",
+            list(BRI_ASSETS.keys()),
+            key="single_asset_select"
+        )
+
+    with col2:
+        force_full_single = st.checkbox("Force full recalculation", key="force_full_single")
+
+    st.markdown("---")
+
+    if st.button("🔄 Update Selected Asset", type="primary"):
         with st.spinner(f"Updating {selected_asset}..."):
             asset_info = BRI_ASSETS[selected_asset]
             result = update_service.update_asset(
                 selected_asset,
                 asset_info['yahoo_ticker'],
-                force_full=force_full
+                force_full=force_full_single
             )
-            
+
             if result['success']:
                 st.success(f"✅ Successfully updated {selected_asset}!")
                 st.json(result)
