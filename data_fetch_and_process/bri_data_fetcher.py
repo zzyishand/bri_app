@@ -26,11 +26,11 @@ warnings.filterwarnings('ignore')
 # BRI Asset Mapping to Yahoo Finance Tickers
 BRI_ASSETS = {
     # Equity Indices
-    'DOW_JONES': {
-        'yahoo_ticker': '^DJI',
-        'description': 'Dow Jones Industrial Average',
+    'SP500': {
+        'yahoo_ticker': '^GSPC',
+        'description': 'S&P 500 Index',
         'asset_class': 'Equity Index',
-        'original_ticker': 'INDU'
+        'original_ticker': 'SPX'
     },
     'NASDAQ_100': {
         'yahoo_ticker': '^NDX',

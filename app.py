@@ -31,7 +31,7 @@ st.set_page_config(
 
 # Asset information with Chinese names
 ASSET_INFO = {
-    'DOW_JONES': {'name_en': 'Dow Jones', 'name_cn': '道琼斯', 'category': 'Global Equity'},
+    'SP500': {'name_en': 'S&P 500', 'name_cn': '标普500', 'category': 'Global Equity'},
     'NASDAQ_100': {'name_en': 'NASDAQ-100', 'name_cn': '纳斯达克100', 'category': 'Global Equity'},
     'NIKKEI_225': {'name_en': 'Nikkei 225', 'name_cn': '日经225', 'category': 'Global Equity'},
     'KOSPI': {'name_en': 'KOSPI', 'name_cn': '韩国综合指数', 'category': 'Global Equity'},
@@ -65,7 +65,7 @@ ASSET_INFO = {
 # Common Assets - Most watched assets (默认显示)
 COMMON_ASSETS = [
     'GOLD', 'CRUDE_OIL', 'COPPER',  # Commodities
-    'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'DOW_JONES',  # Global Equities
+    'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'SP500',  # Global Equities
     'US_DOLLAR_INDEX', 'EUR', 'JPY',  # Currencies
     'IG_SPREAD', 'HY_SPREAD'  # Credit Spreads
 ]
