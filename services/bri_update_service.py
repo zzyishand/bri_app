@@ -211,18 +211,29 @@ class BRIUpdateService:
             else:
                 # 增量更新：只计算新日期
                 print(f"[3/4] Calculating BRI (incremental update)...")
-                
+
                 # 获取足够的历史数据（用于计算百分位数）
                 start_date = last_bri_date - timedelta(days=self.required_history)
                 historical_data = self.db.get_price_data(asset_name, start_date=start_date)
-                
+
+                # BUG FIX: Merge newly fetched price_data with historical data
+                # The newly fetched price_data may have newer dates than what's in DB
+                # We need to combine them to get the full picture for BRI calculation
+                if price_data is not None and not price_data.empty:
+                    # Ensure no duplicate dates by concatenating and removing duplicates
+                    combined_data = pd.concat([historical_data, price_data])
+                    combined_data = combined_data[~combined_data.index.duplicated(keep='last')]
+                    combined_data = combined_data.sort_index()
+                else:
+                    combined_data = historical_data
+
                 # 计算完整BRI
                 all_results = self.calculator.calculate_full_bri(
-                    historical_data,
+                    combined_data,
                     price_column='Close',
                     asset_name=asset_name
                 )
-                
+
                 # 只保存新日期的结果
                 bri_results = all_results[all_results.index > last_bri_date]
                 new_bri_rows = len(bri_results)
