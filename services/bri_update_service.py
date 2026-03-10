@@ -234,18 +234,32 @@ class BRIUpdateService:
                     asset_name=asset_name
                 )
 
-                # 只保存新日期的结果
-                bri_results = all_results[all_results.index > last_bri_date]
+                # 只保存新日期的结果 (>= to include the new date itself)
+                bri_results = all_results[all_results.index >= last_bri_date]
                 new_bri_rows = len(bri_results)
             
             # 4. 保存BRI结果
             print(f"[4/4] Saving BRI results to database...")
             if new_bri_rows > 0:
-                self.db.save_bri_results(asset_name, bri_results)
-                self.db.log_update(
-                    asset_name, 'bri_calc', 'success',
-                    new_bri_rows, f"Calculated {new_bri_rows} new BRI rows"
-                )
+                # Filter out rows where return is 0 or NaN (no actual price change)
+                # This ensures we don't save records for dates without new trading data
+                valid_results = bri_results[
+                    (bri_results['returns'].notna()) &
+                    (bri_results['returns'] != 0)
+                ]
+                actual_new_rows = len(valid_results)
+
+                if actual_new_rows > 0:
+                    self.db.save_bri_results(asset_name, valid_results)
+                    self.db.log_update(
+                        asset_name, 'bri_calc', 'success',
+                        actual_new_rows, f"Calculated {actual_new_rows} new BRI rows"
+                    )
+                else:
+                    self.db.log_update(
+                        asset_name, 'bri_calc', 'skipped',
+                        0, "No actual price change - skipped"
+                    )
             
             return {
                 'success': True,

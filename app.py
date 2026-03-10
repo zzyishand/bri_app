@@ -19,6 +19,7 @@ sys.path.insert(0, str(project_root))
 from database.bri_database import BRIDatabase
 from services.bri_update_service import BRIUpdateService
 from services.custom_ticker_service import CustomTickerService
+from services.scheduler_service import BackgroundUpdateScheduler, get_scheduler
 from data_fetch_and_process.bri_data_fetcher import BRI_ASSETS
 
 # Page configuration
@@ -980,16 +981,86 @@ def main():
     
     st.sidebar.markdown("---")
     st.sidebar.markdown("### 系统信息 / System Info")
-    
+
     db = get_database()
     metadata = db.get_metadata()
-    
+
     if not metadata.empty:
         st.sidebar.metric("Assets in Database", len(metadata))
         latest_update = metadata['updated_at'].max() if 'updated_at' in metadata.columns else 'N/A'
         st.sidebar.text(f"Last Update:\n{latest_update}")
     else:
         st.sidebar.info("No data in database yet")
+
+    # ============================================================
+    # Auto-Update Scheduler Section
+    # ============================================================
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 🔄 Auto-Update Scheduler")
+
+    # Initialize scheduler in session state (to avoid multiple instances)
+    if 'scheduler' not in st.session_state:
+        st.session_state.scheduler = get_scheduler('data/bri_data.db', interval_hours=6)
+
+    scheduler = st.session_state.scheduler
+
+    # Show scheduler status
+    status = scheduler.get_status()
+    if status.get('running'):
+        next_run = status.get('next_run')
+        if next_run:
+            st.sidebar.success(f"✅ Scheduler Active")
+            st.sidebar.text(f"Next update: {next_run.strftime('%Y-%m-%d %H:%M')}")
+        else:
+            st.sidebar.warning("⏸️ Scheduler idle")
+    else:
+        st.sidebar.error("❌ Scheduler not running")
+
+    # Manual update button
+    if st.sidebar.button("🔄 Update Now", use_container_width=True):
+        with st.spinner("Running update for all assets..."):
+            update_result = scheduler.update_now()
+
+            # Display results
+            st.sidebar.success(f"✅ Update complete!")
+            st.sidebar.markdown("---")
+
+            # Summary
+            if update_result:
+                cols = st.sidebar.columns(3)
+                cols[0].metric("Updated", update_result.get('success_count', 0))
+                cols[1].metric("Failed", update_result.get('fail_count', 0))
+                cols[2].metric("Up to Date", update_result.get('up_to_date_count', 0))
+
+                # Show details in expander
+                with st.sidebar.expander("📋 Update Details", expanded=True):
+                    results = update_result.get('results', [])
+
+                    # Filter to show only updated or failed
+                    changed = [r for r in results if r.get('success') == True]
+                    failed = [r for r in results if r.get('success') == False]
+
+                    if changed:
+                        st.write("**✅ Updated:**")
+                        for r in changed[:10]:  # Show first 10
+                            st.text(f"  • {r['asset']}: +{r['new_rows']} rows")
+                        if len(changed) > 10:
+                            st.text(f"  ... and {len(changed) - 10} more")
+
+                    if failed:
+                        st.write("**❌ Failed:**")
+                        for r in failed[:5]:  # Show first 5
+                            st.text(f"  • {r['asset']}: {r['message'][:50]}")
+
+    # Show recent update history
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 📝 Recent Updates")
+    history = db.get_update_history(limit=5)
+    if not history.empty:
+        for _, row in history.head(3).iterrows():
+            status_icon = "✅" if row['status'] == 'success' else "❌"
+            date_str = row['created_at'].strftime('%m/%d %H:%M') if 'created_at' in row else ''
+            st.sidebar.text(f"{status_icon} {row['asset_name'][:12]}: {row['message'][:25]}")
     
     # Route to pages
     if page == "📊 Dashboard":
