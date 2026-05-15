@@ -21,6 +21,7 @@ from services.bri_update_service import BRIUpdateService
 from services.custom_ticker_service import CustomTickerService
 from services.scheduler_service import BackgroundUpdateScheduler, get_scheduler
 from data_fetch_and_process.bri_data_fetcher import BRI_ASSETS
+from config import DB_PATH
 
 # Page configuration
 st.set_page_config(
@@ -132,19 +133,19 @@ def get_category_color(category):
 @st.cache_resource
 def get_database():
     """获取数据库实例"""
-    return BRIDatabase('data/bri_data.db')
+    return BRIDatabase(DB_PATH)
 
 
 @st.cache_resource
 def get_update_service():
     """获取更新服务实例"""
-    return BRIUpdateService('data/bri_data.db')
+    return BRIUpdateService(DB_PATH)
 
 
 @st.cache_resource
 def get_custom_ticker_service():
     """获取自定义Ticker服务实例"""
-    return CustomTickerService('data/bri_data.db')
+    return CustomTickerService(DB_PATH)
 
 
 def load_bri_data_from_db():
@@ -1036,7 +1037,7 @@ def main():
 
     # Initialize scheduler in session state (to avoid multiple instances)
     if 'scheduler' not in st.session_state:
-        st.session_state.scheduler = get_scheduler('data/bri_data.db', interval_hours=6)
+        st.session_state.scheduler = get_scheduler(DB_PATH, interval_hours=6)
 
     scheduler = st.session_state.scheduler
 
