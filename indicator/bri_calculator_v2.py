@@ -425,12 +425,15 @@ class BRICalculatorV2:
             
             results = pd.concat([results, sub_indicator_results], axis=1)
         
-        # Calculate composite BRI (average of three sub-indicators)
-        results['composite_bri'] = (
-            results['short_indicator'] +
-            results['mid_indicator'] +
-            results['long_indicator']
-        ) / 3.0
+        # Calculate composite BRI from available sub-indicators.
+        # Some sources, such as current FRED credit-spread series, may not have
+        # enough history for the long-term horizon but still have valid short
+        # and mid-term signals. Require at least two horizons to avoid treating
+        # very short histories as a full composite.
+        indicator_cols = ['short_indicator', 'mid_indicator', 'long_indicator']
+        indicator_count = results[indicator_cols].notna().sum(axis=1)
+        results['composite_bri'] = results[indicator_cols].mean(axis=1, skipna=True)
+        results.loc[indicator_count < 2, 'composite_bri'] = pd.NA
         
         # Add metadata
         if asset_name:
@@ -519,4 +522,3 @@ class BRICalculatorV2:
         results_to_save.to_csv(output_path)
         print(f"  [OK] BRI results saved to: {output_path}")
         print(f"  [OK] Rows: {len(results_to_save)}, Columns: {len(results_to_save.columns)}")
-
