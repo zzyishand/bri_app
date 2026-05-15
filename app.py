@@ -50,6 +50,8 @@ ASSET_INFO = {
     'XLE': {'name_en': 'Energy', 'name_cn': '能源', 'category': 'US Sectors'},
     'IXE': {'name_en': 'Energy Index', 'name_cn': '能源指数', 'category': 'US Sectors'},
     'BIOTECH': {'name_en': 'Biotech', 'name_cn': '生物科技', 'category': 'US Sectors'},
+    'SMH': {'name_en': 'SMH Semiconductor', 'name_cn': '半导体ETF', 'category': 'US Sectors'},
+    'DRAM': {'name_en': 'DRAM Memory', 'name_cn': '存储芯片ETF', 'category': 'US Sectors'},
     'GOLD': {'name_en': 'Gold', 'name_cn': '黄金', 'category': 'Commodity'},
     'SILVER': {'name_en': 'Silver', 'name_cn': '白银', 'category': 'Commodity'},
     'CRUDE_OIL': {'name_en': 'Crude Oil', 'name_cn': '原油', 'category': 'Commodity'},
@@ -67,6 +69,7 @@ ASSET_INFO = {
 COMMON_ASSETS = [
     'GOLD', 'CRUDE_OIL', 'COPPER',  # Commodities
     'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'SP500',  # Global Equities
+    'SMH', 'DRAM',  # Semiconductor ETFs
     'US_DOLLAR_INDEX', 'EUR', 'JPY',  # Currencies
     'IG_SPREAD', 'HY_SPREAD'  # Credit Spreads
 ]
@@ -190,15 +193,20 @@ def get_latest_metrics(all_data):
         # Debug: show columns
         st.sidebar.text(f"{asset_name} columns: {df.columns.tolist()[:5]}")
         
-        # Find the latest row with valid BRI data
+        # Find the latest row with valid BRI data. Default assets with short
+        # history are still shown as N/A instead of disappearing silently.
         valid_data = df[df['composite_bri'].notna()].copy()
-        if len(valid_data) == 0:
+        has_valid_bri = len(valid_data) > 0
+        if has_valid_bri:
+            latest = valid_data.iloc[-1]
+            data_status = 'Valid BRI'
+        elif asset_name in COMMON_ASSETS:
+            latest = df.iloc[-1]
+            data_status = 'Insufficient history'
+        else:
             st.sidebar.warning(f"Skipping {asset_name}: No valid composite_bri")
             continue
-        
-        # Get latest valid data
-        latest = valid_data.iloc[-1]
-        
+
         # Calculate metrics
         bri = float(latest['composite_bri']) if pd.notna(latest['composite_bri']) else 0.0
         price = float(latest['price']) if pd.notna(latest['price']) else 0.0
@@ -211,7 +219,7 @@ def get_latest_metrics(all_data):
         
         # Skip if all indicators are 0 (but not 0.5 which is a valid value)
         # Relaxed condition to show more data
-        if bri == 0.0 and short_bri == 0.0 and mid_bri == 0.0 and long_bri == 0.0:
+        if has_valid_bri and bri == 0.0 and short_bri == 0.0 and mid_bri == 0.0 and long_bri == 0.0:
             st.sidebar.warning(f"Skipping {asset_name}: All indicators are 0")
             continue
         
@@ -229,7 +237,9 @@ def get_latest_metrics(all_data):
             'long_bri': long_bri,
             'price': price,
             'daily_return': daily_return,
-            'date': date_val
+            'date': date_val,
+            'has_valid_bri': has_valid_bri,
+            'data_status': data_status
         })
     
     return pd.DataFrame(metrics)
@@ -251,7 +261,8 @@ def create_bubble_chart(metrics_df):
     )
     metrics_df['hover_text'] = metrics_df.apply(
         lambda row: f"<b>{row['name_en']} / {row['name_cn']}</b><br>" +
-                   f"BRI: {row['bri']:.2%}<br>" +
+                   (f"BRI: {row['bri']:.2%}<br>" if row.get('has_valid_bri', True) else "BRI: N/A<br>") +
+                   f"Status: {row.get('data_status', 'Valid BRI')}<br>" +
                    f"Daily Return: {row['daily_return']:.2%}<br>" +
                    f"Price: {row['price']:.2f}",
         axis=1
@@ -467,7 +478,7 @@ def dashboard_page():
             "Filter by Category", 
             categories,
             index=0,  # Default to "Common Assets"
-            help="Common Assets includes: Gold, Oil, Copper, major indices, USD/EUR/JPY, and credit spreads"
+            help="Common Assets includes: Gold, Oil, Copper, major indices, SMH/DRAM, USD/EUR/JPY, and credit spreads"
         )
     
     with col2:
@@ -484,12 +495,13 @@ def dashboard_page():
     # ===== Summary Statistics (moved from sidebar) =====
     st.markdown("---")
     st.header("📈 Summary Statistics")
+    valid_metrics_df = metrics_df[metrics_df['has_valid_bri']] if 'has_valid_bri' in metrics_df.columns else metrics_df
     
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Total Assets", len(metrics_df))
-    col2.metric("Avg BRI", f"{metrics_df['bri'].mean():.2%}")
-    col3.metric("High Risk (>70%)", len(metrics_df[metrics_df['bri'] > 0.7]))
-    col4.metric("Elevated Risk (50-70%)", len(metrics_df[(metrics_df['bri'] >= 0.5) & (metrics_df['bri'] <= 0.7)]))
+    col2.metric("Avg BRI", f"{valid_metrics_df['bri'].mean():.2%}" if not valid_metrics_df.empty else "N/A")
+    col3.metric("High Risk (>70%)", len(valid_metrics_df[valid_metrics_df['bri'] > 0.7]))
+    col4.metric("Elevated Risk (50-70%)", len(valid_metrics_df[(valid_metrics_df['bri'] >= 0.5) & (valid_metrics_df['bri'] <= 0.7)]))
     
     st.markdown("---")
     
@@ -503,15 +515,20 @@ def dashboard_page():
     st.markdown("---")
     st.header("📊 Detailed Asset Analysis")
     
-    metrics_df_sorted = metrics_df.sort_values('bri', ascending=False)
+    metrics_df_sorted = metrics_df.sort_values(['has_valid_bri', 'bri'], ascending=[False, False])
     
     cols = st.columns(5)
     for idx, (_, row) in enumerate(metrics_df_sorted.iterrows()):
         col = cols[idx % 5]
         with col:
-            risk_emoji = "🔴" if row['bri'] > 0.7 else "🟡" if row['bri'] > 0.5 else "🟢"
+            if row.get('has_valid_bri', True):
+                risk_emoji = "🔴" if row['bri'] > 0.7 else "🟡" if row['bri'] > 0.5 else "🟢"
+                bri_text = f"{row['bri']:.1%}"
+            else:
+                risk_emoji = "⚪"
+                bri_text = "N/A"
             if st.button(
-                f"{risk_emoji} {row['name_en']}\n{row['name_cn']}\n{row['bri']:.1%}",
+                f"{risk_emoji} {row['name_en']}\n{row['name_cn']}\n{bri_text}",
                 key=f"btn_{row['asset']}",
                 width='stretch'
             ):
@@ -1075,4 +1092,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
