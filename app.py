@@ -51,6 +51,7 @@ ASSET_INFO = {
     'XLE': {'name_en': 'Energy', 'name_cn': '能源', 'category': 'US Sectors'},
     'IXE': {'name_en': 'Energy Index', 'name_cn': '能源指数', 'category': 'US Sectors'},
     'BIOTECH': {'name_en': 'Biotech', 'name_cn': '生物科技', 'category': 'US Sectors'},
+    'SOX': {'name_en': 'SOX Semiconductor', 'name_cn': '费城半导体指数', 'category': 'US Sectors'},
     'SMH': {'name_en': 'SMH Semiconductor', 'name_cn': '半导体ETF', 'category': 'US Sectors'},
     'DRAM': {'name_en': 'DRAM Memory', 'name_cn': '存储芯片ETF', 'category': 'US Sectors'},
     'GOLD': {'name_en': 'Gold', 'name_cn': '黄金', 'category': 'Commodity'},
@@ -70,7 +71,7 @@ ASSET_INFO = {
 COMMON_ASSETS = [
     'GOLD', 'CRUDE_OIL', 'COPPER',  # Commodities
     'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'SP500',  # Global Equities
-    'SMH', 'DRAM',  # Semiconductor ETFs
+    'SOX', 'DRAM',  # Semiconductor indicators
     'US_DOLLAR_INDEX', 'EUR', 'JPY',  # Currencies
     'IG_SPREAD', 'HY_SPREAD'  # Credit Spreads
 ]
@@ -479,7 +480,7 @@ def dashboard_page():
             "Filter by Category", 
             categories,
             index=0,  # Default to "Common Assets"
-            help="Common Assets includes: Gold, Oil, Copper, major indices, SMH/DRAM, USD/EUR/JPY, and credit spreads"
+            help="Common Assets includes: Gold, Oil, Copper, major indices, SOX/DRAM, USD/EUR/JPY, and credit spreads"
         )
     
     with col2:

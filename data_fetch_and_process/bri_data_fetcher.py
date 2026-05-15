@@ -8,7 +8,7 @@ Assets covered:
                   Hang Seng Tech, DAX, CSI300, CSI500
 - Sector Indices: Financials (XLF), Consumer Discretionary (XLY), Communication Services (XLC), 
                   Industrials (XLI), Technology (XLK), Healthcare (XLV), Energy (XLE, IXE), Biotech (IBB),
-                  Semiconductors (SMH), Memory (DRAM)
+                  Semiconductors (SOX/SMH), Memory (DRAM)
 - Commodities: Gold, Silver, Crude Oil, Copper
 - Currencies: US Dollar Index (DXY), Japanese Yen (JPY), Euro (EUR)
 - Cryptocurrencies: Bitcoin
@@ -173,6 +173,13 @@ BRI_ASSETS = {
         'asset_class': 'Sector Index',
         'original_ticker': 'IBB',
         'alternative_ticker': '^SPSIBI'  # S&P Biotech Select Industry Index as backup
+    },
+    'SOX': {
+        'yahoo_ticker': '^SOX',
+        'description': 'PHLX Semiconductor Index',
+        'asset_class': 'Sector Index',
+        'original_ticker': 'SOX',
+        'alternative_ticker': 'SOXX'  # iShares Semiconductor ETF as backup
     },
     'SMH': {
         'yahoo_ticker': 'SMH',
