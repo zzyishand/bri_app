@@ -29,7 +29,12 @@ class BRIUpdateService:
         self.fred_fetcher = FREDDataFetcher()
         
         # 需要的历史天数（用于计算百分位数）
-        self.required_history = 1260  # ~5年
+        # Long-term BRI needs a 252-day moment window plus a 1260-observation
+        # percentile lookback. Convert trading observations to calendar days so
+        # incremental updates still have enough history to calculate composite BRI.
+        long_window = self.config.windows.long_term
+        required_observations = long_window.moment_window + long_window.percentile_lookback
+        self.required_history = int(required_observations * 7 / 5) + 30
         
         # FRED数据源的资产列表
         self.fred_assets = ['IG_SPREAD', 'HY_SPREAD']
@@ -197,7 +202,10 @@ class BRIUpdateService:
             )
 
             # 3. 检查BRI是否需要更新
-            last_bri_date = self.db.get_last_date(asset_name, 'bri_results')
+            # Use the last valid composite BRI date, not merely the last saved
+            # BRI row. Some incremental runs can save short/mid-term rows before
+            # enough long-term history is available.
+            last_bri_date = self.db.get_last_valid_bri_date(asset_name)
 
             # Fix timezone: make last_bri_date tz-naive if it has timezone
             if last_bri_date is not None and last_bri_date.tzinfo is not None:
@@ -246,6 +254,8 @@ class BRIUpdateService:
             
             # 4. 保存BRI结果
             print(f"[4/4] Saving BRI results to database...")
+            actual_new_rows = 0
+            valid_bri_rows = 0
             if new_bri_rows > 0:
                 # Filter out rows where return is 0 or NaN (no actual price change)
                 # This ensures we don't save records for dates without new trading data
@@ -254,12 +264,13 @@ class BRIUpdateService:
                     (bri_results['returns'] != 0)
                 ]
                 actual_new_rows = len(valid_results)
+                valid_bri_rows = int(valid_results['composite_bri'].notna().sum()) if 'composite_bri' in valid_results else 0
 
                 if actual_new_rows > 0:
                     self.db.save_bri_results(asset_name, valid_results)
                     self.db.log_update(
                         asset_name, 'bri_calc', 'success',
-                        actual_new_rows, f"Calculated {actual_new_rows} new BRI rows"
+                        valid_bri_rows, f"Saved {actual_new_rows} BRI rows ({valid_bri_rows} valid composite rows)"
                     )
                 else:
                     self.db.log_update(
@@ -272,6 +283,8 @@ class BRIUpdateService:
                 'asset_name': asset_name,
                 'price_rows': len(price_data),
                 'new_bri_rows': new_bri_rows,
+                'saved_bri_rows': actual_new_rows,
+                'valid_bri_rows': valid_bri_rows,
                 'last_date': price_data.index[-1],
                 'message': f"Successfully updated {asset_name}"
             }

@@ -674,7 +674,12 @@ def update_page():
 
                 with results_container:
                     if result['success']:
-                        st.success(f"✅ {asset_name}: Added {result['new_bri_rows']} new BRI rows")
+                        valid_bri_rows = result.get('valid_bri_rows', result.get('new_bri_rows', 0))
+                        saved_bri_rows = result.get('saved_bri_rows', result.get('new_bri_rows', 0))
+                        if valid_bri_rows > 0:
+                            st.success(f"✅ {asset_name}: Saved {saved_bri_rows} rows, {valid_bri_rows} valid composite BRI rows")
+                        else:
+                            st.warning(f"⚠️ {asset_name}: Saved {saved_bri_rows} rows, but no valid composite BRI rows yet")
                     else:
                         st.error(f"❌ {asset_name}: {result.get('error', 'Unknown error')}")
 
@@ -719,6 +724,9 @@ def update_page():
 
             if result['success']:
                 st.success(f"✅ Successfully updated {selected_asset}!")
+                valid_bri_rows = result.get('valid_bri_rows')
+                if valid_bri_rows is not None and valid_bri_rows == 0:
+                    st.warning("Update completed, but no valid composite BRI rows were saved. Try Force full recalculation if the dashboard still shows N/A.")
                 st.json(result)
             else:
                 st.error(f"❌ Failed to update {selected_asset}")

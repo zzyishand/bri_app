@@ -76,12 +76,12 @@ class BackgroundUpdateScheduler:
                     results.append({
                         'asset': asset_key,
                         'success': result.get('success', False),
-                        'new_rows': result.get('new_bri_rows', 0),
+                        'new_rows': result.get('valid_bri_rows', result.get('new_bri_rows', 0)),
                         'message': result.get('message', result.get('error', 'Unknown'))
                     })
 
                     if result.get('success'):
-                        logger.info(f"  ✓ {asset_key}: Updated with {result.get('new_bri_rows', 0)} new rows")
+                        logger.info(f"  ✓ {asset_key}: Updated with {result.get('valid_bri_rows', result.get('new_bri_rows', 0))} valid BRI rows")
                         success_count += 1
                     else:
                         logger.error(f"  ✗ {asset_key}: {result.get('error', 'Unknown error')}")

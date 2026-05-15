@@ -189,6 +189,25 @@ class BRIDatabase:
         conn.close()
         
         return pd.to_datetime(result) if result else None
+
+    def get_last_valid_bri_date(self, asset_name: str):
+        """获取最后一个 composite_bri 有效的日期"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT MAX(date)
+            FROM bri_results
+            WHERE asset_name = ?
+              AND composite_bri IS NOT NULL
+            """,
+            (asset_name,)
+        )
+        result = cursor.fetchone()[0]
+        conn.close()
+
+        return pd.to_datetime(result) if result else None
     
     def save_bri_results(self, asset_name: str, df: pd.DataFrame):
         """保存BRI结果"""
@@ -361,4 +380,3 @@ class BRIDatabase:
         
         conn.close()
         return df
-
