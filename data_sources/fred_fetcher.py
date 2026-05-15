@@ -5,6 +5,7 @@ Fetches credit spread data from FRED API
 
 import pandas as pd
 import requests
+import os
 from datetime import datetime, timedelta
 from typing import Optional, Tuple
 
@@ -41,7 +42,7 @@ class FREDDataFetcher:
         api_key : str, optional
             FRED API密钥，如果不提供则使用默认密钥
         """
-        self.api_key = api_key or self.FRED_API_KEY
+        self.api_key = api_key or os.getenv('FRED_API_KEY') or self.FRED_API_KEY
     
     def fetch_series(self, 
                     series_id: str,
@@ -221,4 +222,3 @@ def test_fred_fetcher():
 
 if __name__ == "__main__":
     test_fred_fetcher()
-

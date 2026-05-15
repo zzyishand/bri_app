@@ -604,12 +604,15 @@ def update_page():
 
                 # Display results
                 needs_update = [r for r in check_results if r.get('has_new_data')]
-                up_to_date = [r for r in check_results if not r.get('has_new_data')]
+                failed_checks = [r for r in check_results if r.get('error')]
+                up_to_date = [r for r in check_results if not r.get('has_new_data') and not r.get('error')]
+                retryable_assets = needs_update + failed_checks
 
-                col1, col2, col3 = st.columns(3)
+                col1, col2, col3, col4 = st.columns(4)
                 col1.metric("Total Assets", len(check_results))
                 col2.metric("Needs Update", len(needs_update), delta=len(needs_update))
                 col3.metric("Up to Date", len(up_to_date))
+                col4.metric("Check Failed", len(failed_checks), delta=len(failed_checks))
 
                 if needs_update:
                     st.success(f"Found {len(needs_update)} assets with new data!")
@@ -618,7 +621,15 @@ def update_page():
                         'asset', 'last_db_date', 'latest_available_date', 'new_rows'
                     ]], width='stretch')
 
-                    st.session_state['assets_to_update'] = needs_update
+                if failed_checks:
+                    st.warning(f"{len(failed_checks)} assets failed the update check. They are included below for retry in Batch Update.")
+                    df_failed = pd.DataFrame(failed_checks)
+                    st.dataframe(df_failed[[
+                        'asset', 'last_db_date', 'error'
+                    ]], width='stretch')
+
+                if retryable_assets:
+                    st.session_state['assets_to_update'] = retryable_assets
                 else:
                     st.info("All assets are up to date! ✅")
 

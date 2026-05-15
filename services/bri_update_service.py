@@ -70,6 +70,9 @@ class BRIUpdateService:
             if recent_data is None or recent_data.empty:
                 return {
                     'has_new_data': False,
+                    'last_db_date': last_db_date,
+                    'latest_available_date': None,
+                    'new_rows': 0,
                     'error': 'Failed to fetch data'
                 }
             
@@ -115,6 +118,9 @@ class BRIUpdateService:
         except Exception as e:
             return {
                 'has_new_data': False,
+                'last_db_date': last_db_date,
+                'latest_available_date': None,
+                'new_rows': 0,
                 'error': str(e)
             }
     
@@ -279,4 +285,3 @@ class BRIUpdateService:
                 'asset_name': asset_name,
                 'error': str(e)
             }
-
