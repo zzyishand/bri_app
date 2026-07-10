@@ -249,6 +249,32 @@ BRI_ASSETS = {
         'original_ticker': 'HY_SPREAD',
         'data_source': 'FRED',
         'note': 'Data fetched from FRED API, measures spread between HY corporate bonds and Treasury curve'
+    },
+
+    # Credit and Bond ETFs/Funds (Yahoo Finance adjusted close)
+    'AGG': {
+        'yahoo_ticker': 'AGG',
+        'description': 'iShares Core U.S. Aggregate Bond ETF',
+        'asset_class': 'Credit',
+        'original_ticker': 'AGG',
+        'data_source': 'Yahoo Finance',
+        'note': 'US aggregate bond ETF; adjusted close includes distributions'
+    },
+    'LQD': {
+        'yahoo_ticker': 'LQD',
+        'description': 'iShares iBoxx $ Investment Grade Corporate Bond ETF',
+        'asset_class': 'Credit',
+        'original_ticker': 'LQD',
+        'data_source': 'Yahoo Finance',
+        'note': 'US investment-grade corporate bond ETF; adjusted close includes distributions'
+    },
+    'VBMFX': {
+        'yahoo_ticker': 'VBMFX',
+        'description': 'Vanguard Total Bond Market Index Fund Investor Shares',
+        'asset_class': 'Credit',
+        'original_ticker': 'VBMFX',
+        'data_source': 'Yahoo Finance',
+        'note': 'Vanguard total US bond market mutual fund; adjusted close includes distributions'
     }
 }
 
@@ -290,7 +316,7 @@ def fetch_asset_data(asset_name, ticker_symbol, period='max', interval='1d', max
             ticker = yf.Ticker(ticker_symbol)
             
             # Fetch historical data
-            data = ticker.history(period=period, interval=interval)
+            data = ticker.history(period=period, interval=interval, auto_adjust=True)
             
             if data.empty:
                 print(f"  [WARNING] No data found for {ticker_symbol}")

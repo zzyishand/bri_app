@@ -29,6 +29,9 @@ data/*.db-journal
 *.sqlite
 *.sqlite3
 
+# Local research artifacts
+backtests/
+
 # Logs
 *.log
 

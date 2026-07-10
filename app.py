@@ -64,7 +64,10 @@ ASSET_INFO = {
     'BITCOIN': {'name_en': 'Bitcoin', 'name_cn': '比特币', 'category': 'Crypto'},
     'MAG7': {'name_en': 'Mag 7', 'name_cn': '科技7巨头', 'category': 'Tech Giants'},
     'IG_SPREAD': {'name_en': 'IG Spread', 'name_cn': '投资级利差', 'category': 'Credit'},
-    'HY_SPREAD': {'name_en': 'HY Spread', 'name_cn': '高收益利差', 'category': 'Credit'}
+    'HY_SPREAD': {'name_en': 'HY Spread', 'name_cn': '高收益利差', 'category': 'Credit'},
+    'AGG': {'name_en': 'AGG US Aggregate Bond ETF', 'name_cn': '美国综合债券ETF', 'category': 'Credit'},
+    'LQD': {'name_en': 'LQD IG Corporate Bond ETF', 'name_cn': '美国投资级公司债ETF', 'category': 'Credit'},
+    'VBMFX': {'name_en': 'Vanguard Total Bond Fund', 'name_cn': 'Vanguard美国综合债券基金', 'category': 'Credit'}
 }
 
 # Common Assets - Most watched assets (默认显示)
@@ -73,7 +76,7 @@ COMMON_ASSETS = [
     'CSI300', 'HSI', 'NASDAQ_100', 'NIKKEI_225', 'KOSPI', 'DAX', 'SP500',  # Global Equities
     'SOX', 'DRAM',  # Semiconductor indicators
     'US_DOLLAR_INDEX', 'EUR', 'JPY',  # Currencies
-    'IG_SPREAD', 'HY_SPREAD'  # Credit Spreads
+    'IG_SPREAD', 'HY_SPREAD', 'AGG', 'LQD', 'VBMFX'  # Credit and bond assets
 ]
 
 # Category color mapping - 按资产类别分配颜色
@@ -347,95 +350,58 @@ def create_indicator_plots(asset_data, asset_name):
         st.warning(f"No data available for {asset_name}")
         return
     
-    # Filter out rows with missing data
-    plot_data = asset_data.dropna(subset=['composite_bri', 'short_indicator', 'mid_indicator', 'long_indicator'])
+    # Use composite BRI as the validity gate. Some assets, especially newer
+    # FRED credit series, have short/mid/composite data before long-term BRI.
+    plot_data = asset_data.dropna(subset=['composite_bri']).copy()
     
     if plot_data.empty:
         st.warning(f"No valid BRI data for {asset_name}")
         return
-    
-    # 确保使用Date列而不是index
-    date_col = plot_data['Date'] if 'Date' in plot_data.columns else plot_data.index
-    
+
+    def hex_to_rgba(hex_color, alpha=0.2):
+        hex_color = hex_color.lstrip('#')
+        r, g, b = (int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        return f"rgba({r}, {g}, {b}, {alpha})"
+
+    def plot_bri_series(column, title, color, width=2):
+        """Plot one BRI series only on dates where that horizon is available."""
+        if column not in plot_data.columns:
+            st.info(f"{title} unavailable")
+            return
+
+        series_data = plot_data.dropna(subset=[column])
+        if series_data.empty:
+            st.info(f"{title} unavailable: insufficient history")
+            return
+
+        date_col = series_data['Date'] if 'Date' in series_data.columns else series_data.index
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=date_col,
+            y=series_data[column],
+            mode='lines',
+            line=dict(color=color, width=width),
+            fill='tozeroy',
+            fillcolor=hex_to_rgba(color)
+        ))
+        fig.add_hline(y=0.7, line_dash="dash", line_color="red")
+        fig.add_hline(y=0.5, line_dash="dash", line_color="orange")
+        fig.update_layout(
+            title=title,
+            yaxis=dict(tickformat='.0%'),
+            height=300
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
-        # Short-term BRI
-        fig_short = go.Figure()
-        fig_short.add_trace(go.Scatter(
-            x=date_col,
-            y=plot_data['short_indicator'],
-            mode='lines',
-            line=dict(color='#3498db', width=2),
-            fill='tozeroy',
-            fillcolor='rgba(52, 152, 219, 0.2)'
-        ))
-        fig_short.add_hline(y=0.7, line_dash="dash", line_color="red")
-        fig_short.add_hline(y=0.5, line_dash="dash", line_color="orange")
-        fig_short.update_layout(
-            title='Short-term BRI (3-month)',
-            yaxis=dict(tickformat='.0%'),
-            height=300
-        )
-        st.plotly_chart(fig_short)
-        
-        # Mid-term BRI
-        fig_mid = go.Figure()
-        fig_mid.add_trace(go.Scatter(
-            x=date_col,
-            y=plot_data['mid_indicator'],
-            mode='lines',
-            line=dict(color='#9b59b6', width=2),
-            fill='tozeroy',
-            fillcolor='rgba(155, 89, 182, 0.2)'
-        ))
-        fig_mid.add_hline(y=0.7, line_dash="dash", line_color="red")
-        fig_mid.add_hline(y=0.5, line_dash="dash", line_color="orange")
-        fig_mid.update_layout(
-            title='Mid-term BRI (6-month)',
-            yaxis=dict(tickformat='.0%'),
-            height=300
-        )
-        st.plotly_chart(fig_mid)
-    
+        plot_bri_series('short_indicator', 'Short-term BRI (3-month)', '#3498db')
+        plot_bri_series('mid_indicator', 'Mid-term BRI (6-month)', '#9b59b6')
+
     with col2:
-        # Long-term BRI
-        fig_long = go.Figure()
-        fig_long.add_trace(go.Scatter(
-            x=date_col,
-            y=plot_data['long_indicator'],
-            mode='lines',
-            line=dict(color='#e74c3c', width=2),
-            fill='tozeroy',
-            fillcolor='rgba(231, 76, 60, 0.2)'
-        ))
-        fig_long.add_hline(y=0.7, line_dash="dash", line_color="red")
-        fig_long.add_hline(y=0.5, line_dash="dash", line_color="orange")
-        fig_long.update_layout(
-            title='Long-term BRI (1-year)',
-            yaxis=dict(tickformat='.0%'),
-            height=300
-        )
-        st.plotly_chart(fig_long)
-        
-        # Composite BRI
-        fig_composite = go.Figure()
-        fig_composite.add_trace(go.Scatter(
-            x=date_col,
-            y=plot_data['composite_bri'],
-            mode='lines',
-            line=dict(color='#16a085', width=3),
-            fill='tozeroy',
-            fillcolor='rgba(22, 160, 133, 0.2)'
-        ))
-        fig_composite.add_hline(y=0.7, line_dash="dash", line_color="red")
-        fig_composite.add_hline(y=0.5, line_dash="dash", line_color="orange")
-        fig_composite.update_layout(
-            title='Composite BRI (Average)',
-            yaxis=dict(tickformat='.0%'),
-            height=300
-        )
-        st.plotly_chart(fig_composite)
+        plot_bri_series('long_indicator', 'Long-term BRI (1-year)', '#e74c3c')
+        plot_bri_series('composite_bri', 'Composite BRI (Average)', '#16a085', width=3)
 
 
 # ==================== 页面定义 ====================
@@ -480,7 +446,7 @@ def dashboard_page():
             "Filter by Category", 
             categories,
             index=0,  # Default to "Common Assets"
-            help="Common Assets includes: Gold, Oil, Copper, major indices, SOX/DRAM, USD/EUR/JPY, and credit spreads"
+            help="Common Assets includes: Gold, Oil, Copper, major indices, SOX/DRAM, USD/EUR/JPY, and credit/bond assets"
         )
     
     with col2:
